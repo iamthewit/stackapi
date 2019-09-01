@@ -1,25 +1,22 @@
 <?php
 
-namespace App\BeautyStackOverflow;
+namespace App\Stack;
 
 use DateTimeImmutable;
 
-class Question
+class Answer
 {
     /** @var Id */
     private $id;
 
     /** @var Id */
-    private $groupId;
+    private $questionId;
 
     /** @var Id */
     private $userId;
 
     /** @var string */
     private $text;
-
-    /** @var Id|null */
-    private $selectedAnswerId;
 
     /** @var DateTimeImmutable */
     private $createdAt;
@@ -34,29 +31,27 @@ class Question
      * Question constructor.
      *
      * @param Id                $id
-     * @param Id                $groupId
+     * @param Id                $questionId
      * @param Id                $userId
      * @param string            $text
-     * @param Id|null           $selectedAnswerId
      * @param DateTimeImmutable $createdAt
      * @param DateTimeImmutable $updatedAt
      * @param DateTimeImmutable $deletedAt
      */
     private function __construct(
         Id $id,
-        Id $groupId,
+        Id $questionId,
         Id $userId,
         string $text,
-        ?Id $selectedAnswerId,
         DateTimeImmutable $createdAt,
         DateTimeImmutable $updatedAt,
         DateTimeImmutable $deletedAt
-    ) {
+    )
+    {
         $this->id               = $id;
-        $this->groupId          = $groupId;
+        $this->questionId       = $questionId;
         $this->userId           = $userId;
         $this->text             = $text;
-        $this->selectedAnswerId = $selectedAnswerId;
         $this->createdAt        = $createdAt;
         $this->updatedAt        = $updatedAt;
         $this->deletedAt        = $deletedAt;
@@ -64,22 +59,21 @@ class Question
 
     public static function buildFromValues(
         Id $id,
-        Id $groupId,
+        Id $questionId,
         Id $userId,
         string $text,
-        ?Id $selectedAnswerId,
         DateTimeImmutable $createdAt,
         DateTimeImmutable $updatedAt,
         DateTimeImmutable $deletedAt
-    ) {
-        return new self($id, $groupId, $userId, $text, $selectedAnswerId, $createdAt, $updatedAt, $deletedAt);
+    )
+    {
+        return new self($id, $questionId, $userId, $text, $createdAt, $updatedAt, $deletedAt);
     }
 
 //    public static function buildFromEntity()
 //    {
 //
 //    }
-
 
     /**
      * @return Id
@@ -92,9 +86,9 @@ class Question
     /**
      * @return Id
      */
-    public function groupId(): Id
+    public function questionId(): Id
     {
-        return $this->groupId;
+        return $this->questionId;
     }
 
     /**
@@ -111,14 +105,6 @@ class Question
     public function text(): string
     {
         return $this->text;
-    }
-
-    /**
-     * @return Id|null
-     */
-    public function selectedAnswerId(): ?Id
-    {
-        return $this->selectedAnswerId;
     }
 
     /**
@@ -144,5 +130,4 @@ class Question
     {
         return $this->deletedAt;
     }
-
 }

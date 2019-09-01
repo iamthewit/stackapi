@@ -1,16 +1,16 @@
 <?php
 
-namespace App\BeautyStackOverflow;
+namespace App\Stack;
 
 use DateTimeImmutable;
 
-class Answer
+class Question
 {
     /** @var Id */
     private $id;
 
     /** @var Id */
-    private $questionId;
+    private $groupId;
 
     /** @var Id */
     private $userId;
@@ -18,40 +18,45 @@ class Answer
     /** @var string */
     private $text;
 
+    /** @var Id|null */
+    private $selectedAnswerId;
+
     /** @var DateTimeImmutable */
     private $createdAt;
 
     /** @var DateTimeImmutable */
     private $updatedAt;
 
-    /** @var DateTimeImmutable */
+    /** @var DateTimeImmutable|null */
     private $deletedAt;
 
     /**
      * Question constructor.
      *
-     * @param Id                $id
-     * @param Id                $questionId
-     * @param Id                $userId
-     * @param string            $text
-     * @param DateTimeImmutable $createdAt
-     * @param DateTimeImmutable $updatedAt
-     * @param DateTimeImmutable $deletedAt
+     * @param Id                     $id
+     * @param Id                     $groupId
+     * @param Id                     $userId
+     * @param string                 $text
+     * @param Id|null                $selectedAnswerId
+     * @param DateTimeImmutable      $createdAt
+     * @param DateTimeImmutable      $updatedAt
+     * @param DateTimeImmutable|null $deletedAt
      */
     private function __construct(
         Id $id,
-        Id $questionId,
+        Id $groupId,
         Id $userId,
         string $text,
+        ?Id $selectedAnswerId,
         DateTimeImmutable $createdAt,
         DateTimeImmutable $updatedAt,
-        DateTimeImmutable $deletedAt
-    )
-    {
+        ?DateTimeImmutable $deletedAt
+    ) {
         $this->id               = $id;
-        $this->questionId       = $questionId;
+        $this->groupId          = $groupId;
         $this->userId           = $userId;
         $this->text             = $text;
+        $this->selectedAnswerId = $selectedAnswerId;
         $this->createdAt        = $createdAt;
         $this->updatedAt        = $updatedAt;
         $this->deletedAt        = $deletedAt;
@@ -59,21 +64,27 @@ class Answer
 
     public static function buildFromValues(
         Id $id,
-        Id $questionId,
+        Id $groupId,
         Id $userId,
         string $text,
+        ?Id $selectedAnswerId,
         DateTimeImmutable $createdAt,
         DateTimeImmutable $updatedAt,
-        DateTimeImmutable $deletedAt
-    )
+        ?DateTimeImmutable $deletedAt
+    ) {
+        return new self($id, $groupId, $userId, $text, $selectedAnswerId, $createdAt, $updatedAt, $deletedAt);
+    }
+
+    public static function buildFrom()
     {
-        return new self($id, $questionId, $userId, $text, $createdAt, $updatedAt, $deletedAt);
+        
     }
 
 //    public static function buildFromEntity()
 //    {
 //
 //    }
+
 
     /**
      * @return Id
@@ -86,9 +97,9 @@ class Answer
     /**
      * @return Id
      */
-    public function questionId(): Id
+    public function groupId(): Id
     {
-        return $this->questionId;
+        return $this->groupId;
     }
 
     /**
@@ -108,6 +119,14 @@ class Answer
     }
 
     /**
+     * @return Id|null
+     */
+    public function selectedAnswerId(): ?Id
+    {
+        return $this->selectedAnswerId;
+    }
+
+    /**
      * @return DateTimeImmutable
      */
     public function createdAt(): DateTimeImmutable
@@ -124,10 +143,11 @@ class Answer
     }
 
     /**
-     * @return DateTimeImmutable
+     * @return DateTimeImmutable|null
      */
-    public function deletedAt(): DateTimeImmutable
+    public function deletedAt(): ?DateTimeImmutable
     {
         return $this->deletedAt;
     }
+
 }

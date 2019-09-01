@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BeautyStackOverflow\Factory\Exception;
+namespace App\Stack\Factory\Exception;
 
 class CanNotCreateIdException extends \Exception
 {

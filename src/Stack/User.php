@@ -1,7 +1,8 @@
 <?php
 
-namespace App\BeautyStackOverflow;
+namespace App\Stack;
 
+use App\Entity\UserEntity;
 use DateTimeImmutable;
 
 class User
@@ -30,13 +31,13 @@ class User
     /**
      * User constructor.
      *
-     * @param Id                $id
-     * @param string            $username
-     * @param string            $email
-     * @param string            $password
-     * @param DateTimeImmutable $createdAt
-     * @param DateTimeImmutable $updatedAt
-     * @param DateTimeImmutable $deletedAt
+     * @param Id                     $id
+     * @param string                 $username
+     * @param string                 $email
+     * @param string                 $password
+     * @param DateTimeImmutable      $createdAt
+     * @param DateTimeImmutable      $updatedAt
+     * @param DateTimeImmutable|null $deletedAt
      */
     private function __construct(
         Id $id,
@@ -45,7 +46,7 @@ class User
         string $password,
         DateTimeImmutable $createdAt,
         DateTimeImmutable $updatedAt,
-        DateTimeImmutable $deletedAt
+        ?DateTimeImmutable $deletedAt
     ) {
         $this->id        = $id;
         $this->username  = $username;
@@ -56,6 +57,17 @@ class User
         $this->deletedAt = $deletedAt;
     }
 
+    /**
+     * @param Id                     $id
+     * @param string                 $username
+     * @param string                 $email
+     * @param string                 $password
+     * @param DateTimeImmutable      $createdAt
+     * @param DateTimeImmutable      $updatedAt
+     * @param DateTimeImmutable|null $deletedAt
+     *
+     * @return User
+     */
     public static function buildFromValues(
         Id $id,
         string $username,
@@ -63,24 +75,28 @@ class User
         string $password,
         DateTimeImmutable $createdAt,
         DateTimeImmutable $updatedAt,
-        DateTimeImmutable $deletedAt
+        ?DateTimeImmutable $deletedAt
     ) {
         return new self($id, $username, $email, $password, $createdAt, $updatedAt, $deletedAt);
     }
 
-    // TODO: build from entity once the DB is setup
-//    public static function buildFromEntity(UserEntity $user)
-//    {
-//        return new self(
-//            Id::buildFromValue($user->getId()),
-//            $user->getUsername(),
-//            $user->getEmail(),
-//            $user->getPassword(),
-//            $user->getCreatedAt(),
-//            $user->getUpdatedAt(),
-//            $user->getDeletedAt()
-//        );
-//    }
+    /**
+     * @param UserEntity $userEntity
+     *
+     * @return User
+     */
+    public static function buildFromEntity(UserEntity $userEntity): User
+    {
+        return new self(
+            Id::buildFromValue($userEntity->getId()),
+            $userEntity->getUsername(),
+            $userEntity->getEmail(),
+            $userEntity->getPassword(),
+            $userEntity->getCreatedAt(),
+            $userEntity->getUpdatedAt(),
+            $userEntity->getDeletedAt()
+        );
+    }
 
     /**
      * @return Id
@@ -131,9 +147,9 @@ class User
     }
 
     /**
-     * @return DateTimeImmutable
+     * @return DateTimeImmutable|null
      */
-    public function deletedAt(): DateTimeImmutable
+    public function deletedAt(): ?DateTimeImmutable
     {
         return $this->deletedAt;
     }

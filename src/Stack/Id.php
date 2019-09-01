@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BeautyStackOverflow;
+namespace App\Stack;
 
 class Id
 {
@@ -25,5 +25,10 @@ class Id
     public static function buildFromValue(string $value)
     {
         return new self($value);
+    }
+
+    public function value()
+    {
+        return $this->value;
     }
 }

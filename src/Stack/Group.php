@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BeautyStackOverflow;
+namespace App\Stack;
 
 use DateTimeImmutable;
 
@@ -27,12 +27,12 @@ class Group
     /**
      * Group constructor.
      *
-     * @param Id                $id
-     * @param string            $name
-     * @param Id                $createdByUserId
-     * @param DateTimeImmutable $createdAt
-     * @param DateTimeImmutable $updatedAt
-     * @param DateTimeImmutable $deletedAt
+     * @param Id                     $id
+     * @param string                 $name
+     * @param Id                     $createdByUserId
+     * @param DateTimeImmutable      $createdAt
+     * @param DateTimeImmutable      $updatedAt
+     * @param DateTimeImmutable|null $deletedAt
      */
     private function __construct(
         Id $id,
@@ -40,7 +40,7 @@ class Group
         Id $createdByUserId,
         DateTimeImmutable $createdAt,
         DateTimeImmutable $updatedAt,
-        DateTimeImmutable $deletedAt
+        ?DateTimeImmutable $deletedAt
     ) {
         $this->id              = $id;
         $this->name            = $name;
@@ -50,15 +50,25 @@ class Group
         $this->deletedAt       = $deletedAt;
     }
 
+    /**
+     * @param Id                     $id
+     * @param string                 $name
+     * @param Id                     $createdByUserId
+     * @param DateTimeImmutable      $createdAt
+     * @param DateTimeImmutable      $updatedAt
+     * @param DateTimeImmutable|null $deletedAt
+     *
+     * @return Group
+     */
     public static function buildFromValues(
         Id $id,
         string $name,
         Id $createdByUserId,
         DateTimeImmutable $createdAt,
         DateTimeImmutable $updatedAt,
-        DateTimeImmutable $deletedAt
+        ?DateTimeImmutable $deletedAt
     ) {
-        return new self($id, $name, $createdByUserId,$createdAt,$updatedAt, $deletedAt);
+        return new self($id, $name, $createdByUserId, $createdAt, $updatedAt, $deletedAt);
     }
 
 //    public static function buildFromEntity()
@@ -107,9 +117,9 @@ class Group
     }
 
     /**
-     * @return DateTimeImmutable
+     * @return DateTimeImmutable|null
      */
-    public function deletedAt(): DateTimeImmutable
+    public function deletedAt(): ?DateTimeImmutable
     {
         return $this->deletedAt;
     }

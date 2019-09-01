@@ -6,7 +6,10 @@ RUN apt-get update && apt-get install -y \
    libzip-dev \
    zip \
    unzip \
+   default-mysql-client \
    && docker-php-ext-install -j$(nproc) zip
+
+RUN docker-php-ext-install pdo_mysql
 
 #TODO: this:
 #COPY php.ini /usr/local/etc/php
