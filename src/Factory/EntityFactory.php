@@ -1,12 +1,15 @@
 <?php
 
-namespace App\EntityFactory;
+namespace App\Factory;
 
+use App\Entity\AnswerEntity;
 use App\Entity\QuestionEntity;
 use App\Entity\QuestionGroupEntity;
 use App\Entity\UserEntity;
+use App\Repository\QuestionEntityRepository;
 use App\Repository\QuestionGroupEntityRepository;
 use App\Repository\UserEntityRepository;
+use App\Stack\Answer;
 use App\Stack\Group;
 use App\Stack\Question;
 use App\Stack\User;
@@ -14,7 +17,7 @@ use App\Stack\User;
 /**
  * Class EntityFactory
  * @package App\Stack\Factory
- * @author  Ben Cross <ben@beautystack.com>
+ * @author  Ben Cross <bencross86@gmail.com>
  */
 class EntityFactory
 {
@@ -24,18 +27,24 @@ class EntityFactory
     /** @var QuestionGroupEntityRepository */
     private $questionGroupEntityRepository;
 
+    /** @var QuestionEntityRepository */
+    private $questionEntityRepository;
+
     /**
      * EntityFactory constructor.
      *
      * @param UserEntityRepository          $userEntityRepository
      * @param QuestionGroupEntityRepository $questionGroupEntityRepository
+     * @param QuestionEntityRepository      $questionEntityRepository
      */
     public function __construct(
         UserEntityRepository $userEntityRepository,
-        QuestionGroupEntityRepository $questionGroupEntityRepository
+        QuestionGroupEntityRepository $questionGroupEntityRepository,
+        QuestionEntityRepository $questionEntityRepository
     ) {
         $this->userEntityRepository = $userEntityRepository;
         $this->questionGroupEntityRepository = $questionGroupEntityRepository;
+        $this->questionEntityRepository = $questionEntityRepository;
     }
 
     /**
@@ -43,7 +52,7 @@ class EntityFactory
      *
      * @return UserEntity
      */
-    public function buildUserEntityFromUser(User $user): UserEntity
+    public function buildUserEntity(User $user): UserEntity
     {
         $userEntity = new UserEntity();
         $userEntity->setId($user->id()->value())
@@ -60,13 +69,11 @@ class EntityFactory
     /**
      * @param Group $group
      *
-     * @param User  $user
-     *
      * @return QuestionGroupEntity
      */
-    public function buildQuestionGroupEntityFromGroupAndUser(Group $group, User $user): QuestionGroupEntity
+    public function buildQuestionGroupEntity(Group $group): QuestionGroupEntity
     {
-        $userEntity = $this->userEntityRepository->find($user->id()->value());
+        $userEntity = $this->userEntityRepository->find($group->createdByUserId()->value());
 
         $groupEntity = new QuestionGroupEntity();
         $groupEntity->setId($group->id()->value())
@@ -81,18 +88,12 @@ class EntityFactory
 
     /**
      * @param Question $question
-     * @param Group    $group
-     * @param User     $user
      *
      * @return QuestionEntity
      */
-    public function buildQuestionEntityFromQuestionAndGroupAndUser(
-        Question $question,
-        Group $group,
-        User $user
-    ) {
-        $questionGroupEntity = $this->questionGroupEntityRepository->find($group->id()->value());
-        $userEntity = $this->userEntityRepository->find($user->id()->value());
+    public function buildQuestionEntity(Question $question) {
+        $questionGroupEntity = $this->questionGroupEntityRepository->find($question->groupId()->value());
+        $userEntity = $this->userEntityRepository->find($question->userId()->value());
 
         $questionEntity = new QuestionEntity();
         $questionEntity->setId($question->id()->value())
@@ -104,5 +105,27 @@ class EntityFactory
                        ->setDeletedAt($question->deletedAt());
 
         return $questionEntity;
+    }
+
+    /**
+     * @param Answer $answer
+     *
+     * @return AnswerEntity
+     */
+    public function buildAnswerEntity(Answer $answer): AnswerEntity
+    {
+        $questionEntity = $this->questionEntityRepository->find($answer->questionId()->value());
+        $userEntity = $this->userEntityRepository->find($answer->userId()->value());
+
+        $answerEntity = new AnswerEntity();
+        $answerEntity->setId($answer->id()->value())
+            ->setText($answer->text())
+            ->setQuestion($questionEntity)
+            ->setUser($userEntity)
+            ->setCreatedAt($answer->createdAt())
+            ->setUpdatedAt($answer->updatedAt())
+            ->setDeletedAt($answer->deletedAt());
+
+        return $answerEntity;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Tests\Unit\App\Stack\Factory;
 
-use App\Stack\Factory\IdFactory;
+use App\Factory\IdFactory;
 use App\Stack\Id;
 use PHPUnit\Framework\TestCase;
 

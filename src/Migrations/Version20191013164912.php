@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20191012123258 extends AbstractMigration
+final class Version20191013164912 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,6 +22,15 @@ final class Version20191012123258 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
 
+        $this->addSql('CREATE TABLE answer_entity (id CHAR(36) NOT NULL --(DC2Type:guid)
+        , question_id CHAR(36) NOT NULL --(DC2Type:guid)
+        , user_id CHAR(36) NOT NULL --(DC2Type:guid)
+        , text CLOB NOT NULL, created_at DATETIME NOT NULL --(DC2Type:datetime_immutable)
+        , updated_at DATETIME NOT NULL --(DC2Type:datetime_immutable)
+        , deleted_at DATETIME DEFAULT NULL --(DC2Type:datetime_immutable)
+        , PRIMARY KEY(id))');
+        $this->addSql('CREATE INDEX IDX_FCD17ECF1E27F6BF ON answer_entity (question_id)');
+        $this->addSql('CREATE INDEX IDX_FCD17ECFA76ED395 ON answer_entity (user_id)');
         $this->addSql('CREATE TABLE question (id CHAR(36) NOT NULL --(DC2Type:guid)
         , question_group_id CHAR(36) NOT NULL --(DC2Type:guid)
         , user_id CHAR(36) NOT NULL --(DC2Type:guid)
@@ -59,6 +68,7 @@ final class Version20191012123258 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
 
+        $this->addSql('DROP TABLE answer_entity');
         $this->addSql('DROP TABLE question');
         $this->addSql('DROP INDEX IDX_5D2B55C1A76ED395');
         $this->addSql('CREATE TEMPORARY TABLE __temp__question_group AS SELECT id, user_id, name, created_at, updated_at, deleted_at FROM question_group');

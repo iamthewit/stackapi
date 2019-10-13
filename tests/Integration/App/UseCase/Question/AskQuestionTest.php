@@ -2,7 +2,7 @@
 
 namespace App\Tests\Integration\App\UseCase\Question;
 
-use App\Stack\Factory\IdFactory;
+use App\Factory\IdFactory;
 use App\Stack\Group;
 use App\Stack\Question;
 use App\Stack\User;

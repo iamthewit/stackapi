@@ -2,6 +2,7 @@
 
 namespace App\Tests\Integration;
 
+use App\Entity\AnswerEntity;
 use App\Entity\QuestionEntity;
 use App\Entity\QuestionGroupEntity;
 use App\Entity\UserEntity;
@@ -21,6 +22,7 @@ class IntegrationTest extends KernelTestCase
             $entityManager->getClassMetadata(UserEntity::class),
             $entityManager->getClassMetadata(QuestionGroupEntity::class),
             $entityManager->getClassMetadata(QuestionEntity::class),
+            $entityManager->getClassMetadata(AnswerEntity::class)
             // TODO: add each entity here
         ];
 

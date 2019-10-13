@@ -2,12 +2,10 @@
 
 namespace App\UseCase\Group;
 
-use App\EntityFactory\EntityFactory;
-use App\Stack\Factory\IdFactory;
+use App\Factory\EntityFactory;
+use App\Factory\IdFactory;
 use App\Stack\Group;
 use App\Stack\User;
-use App\Entity\QuestionGroupEntity;
-use App\Repository\UserEntityRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
@@ -47,7 +45,7 @@ class CreateGroup
         );
 
         // create entity based on group object
-        $groupEntity = $this->entityFactory->buildQuestionGroupEntityFromGroupAndUser($group, $user);
+        $groupEntity = $this->entityFactory->buildQuestionGroupEntity($group);
 
         // persist entity
         try {

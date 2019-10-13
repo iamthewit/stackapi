@@ -24,19 +24,19 @@ class Answer
     /** @var DateTimeImmutable */
     private $updatedAt;
 
-    /** @var DateTimeImmutable */
+    /** @var DateTimeImmutable|null */
     private $deletedAt;
 
     /**
      * Question constructor.
      *
-     * @param Id                $id
-     * @param Id                $questionId
-     * @param Id                $userId
-     * @param string            $text
-     * @param DateTimeImmutable $createdAt
-     * @param DateTimeImmutable $updatedAt
-     * @param DateTimeImmutable $deletedAt
+     * @param Id                     $id
+     * @param Id                     $questionId
+     * @param Id                     $userId
+     * @param string                 $text
+     * @param DateTimeImmutable      $createdAt
+     * @param DateTimeImmutable      $updatedAt
+     * @param DateTimeImmutable|null $deletedAt
      */
     private function __construct(
         Id $id,
@@ -45,7 +45,7 @@ class Answer
         string $text,
         DateTimeImmutable $createdAt,
         DateTimeImmutable $updatedAt,
-        DateTimeImmutable $deletedAt
+        ?DateTimeImmutable $deletedAt
     )
     {
         $this->id               = $id;
@@ -64,7 +64,7 @@ class Answer
         string $text,
         DateTimeImmutable $createdAt,
         DateTimeImmutable $updatedAt,
-        DateTimeImmutable $deletedAt
+        ?DateTimeImmutable $deletedAt
     )
     {
         return new self($id, $questionId, $userId, $text, $createdAt, $updatedAt, $deletedAt);
@@ -124,9 +124,9 @@ class Answer
     }
 
     /**
-     * @return DateTimeImmutable
+     * @return DateTimeImmutable|null
      */
-    public function deletedAt(): DateTimeImmutable
+    public function deletedAt(): ?DateTimeImmutable
     {
         return $this->deletedAt;
     }

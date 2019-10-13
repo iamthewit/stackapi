@@ -2,14 +2,10 @@
 
 namespace App\UseCase\Question;
 
-use App\EntityFactory\EntityFactory;
-use App\Stack\Factory\IdFactory;
+use App\Factory\EntityFactory;
+use App\Factory\IdFactory;
 use App\Stack\Group;
-use App\Stack\Id;
 use App\Stack\Question;
-use App\Entity\QuestionEntity;
-use App\Repository\QuestionGroupEntityRepository;
-use App\Repository\UserEntityRepository;
 use App\Stack\User;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -37,14 +33,6 @@ class AskQuestion
         $this->entityFactory = $entityFactory;
     }
 
-    /**
-     * @param Group  $group
-     * @param User   $user
-     * @param string $questionText
-     *
-     * @return Question
-     * @throws Exception
-     */
     public function execute(Group $group, User $user, string $questionText): Question
     {
         // create question object
@@ -60,15 +48,13 @@ class AskQuestion
         );
 
         // create question entity
-        $questionEntity = $this->entityFactory->buildQuestionEntityFromQuestionAndGroupAndUser(
-            $question,
-            $group,
-            $user
-        );
+        $questionEntity = $this->entityFactory->buildQuestionEntity($question);
 
         // store the question in the DB
         $this->entityManager->persist($questionEntity);
         $this->entityManager->flush();
+
+        // TODO: fire questionAskedEvent
 
         return $question;
     }

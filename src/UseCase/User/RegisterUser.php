@@ -2,8 +2,8 @@
 
 namespace App\UseCase\User;
 
-use App\EntityFactory\EntityFactory;
-use App\Stack\Factory\IdFactory;
+use App\Factory\EntityFactory;
+use App\Factory\IdFactory;
 use App\Stack\User;
 use App\Entity\UserEntity;
 use DateTimeImmutable;
@@ -40,7 +40,7 @@ class RegisterUser
         );
 
         // create entity based on user object
-        $userEntity = $this->entityFactory->buildUserEntityFromUser($user);
+        $userEntity = $this->entityFactory->buildUserEntity($user);
 
         // pass entity to repo for storage
         try {

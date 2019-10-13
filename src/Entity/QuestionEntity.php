@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Stack\Question;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,7 +20,7 @@ class QuestionEntity
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string")
      */
     private $text;
 
@@ -48,6 +50,16 @@ class QuestionEntity
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
     private $deletedAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\AnswerEntity", mappedBy="question")
+     */
+    private $answerEntities;
+
+    public function __construct()
+    {
+        $this->answerEntities = new ArrayCollection();
+    }
 
     /**
      * @param Question            $question
@@ -160,6 +172,37 @@ class QuestionEntity
     public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|AnswerEntity[]
+     */
+    public function getAnswerEntities(): Collection
+    {
+        return $this->answerEntities;
+    }
+
+    public function addAnswerEntity(AnswerEntity $answerEntity): self
+    {
+        if (!$this->answerEntities->contains($answerEntity)) {
+            $this->answerEntities[] = $answerEntity;
+            $answerEntity->setQuestion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnswerEntity(AnswerEntity $answerEntity): self
+    {
+        if ($this->answerEntities->contains($answerEntity)) {
+            $this->answerEntities->removeElement($answerEntity);
+            // set the owning side to null (unless already changed)
+            if ($answerEntity->getQuestion() === $this) {
+                $answerEntity->setQuestion(null);
+            }
+        }
 
         return $this;
     }

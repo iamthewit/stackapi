@@ -59,10 +59,16 @@ class UserEntity
      */
     private $questionEntities;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\AnswerEntity", mappedBy="user")
+     */
+    private $answerEntities;
+
     public function __construct()
     {
         $this->groupEntities = new ArrayCollection();
         $this->questionEntities = new ArrayCollection();
+        $this->answerEntities = new ArrayCollection();
     }
 
     /**
@@ -229,6 +235,37 @@ class UserEntity
             // set the owning side to null (unless already changed)
             if ($questionEntity->getUser() === $this) {
                 $questionEntity->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|AnswerEntity[]
+     */
+    public function getAnswerEntities(): Collection
+    {
+        return $this->answerEntities;
+    }
+
+    public function addAnswerEntity(AnswerEntity $answerEntity): self
+    {
+        if (!$this->answerEntities->contains($answerEntity)) {
+            $this->answerEntities[] = $answerEntity;
+            $answerEntity->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnswerEntity(AnswerEntity $answerEntity): self
+    {
+        if ($this->answerEntities->contains($answerEntity)) {
+            $this->answerEntities->removeElement($answerEntity);
+            // set the owning side to null (unless already changed)
+            if ($answerEntity->getUser() === $this) {
+                $answerEntity->setUser(null);
             }
         }
 
