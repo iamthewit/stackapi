@@ -4,8 +4,9 @@ namespace App\Stack;
 
 use App\Entity\UserEntity;
 use DateTimeImmutable;
+use JsonSerializable;
 
-class User
+class User implements JsonSerializable
 {
     /** @var Id */
     private $id;
@@ -152,5 +153,25 @@ class User
     public function deletedAt(): ?DateTimeImmutable
     {
         return $this->deletedAt;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link  https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     *
+     *  TODO: add test for json serialisation
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'id'        => $this->id,
+            'username'  => $this->username,
+            'email'     => $this->email,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
+        ];
     }
 }
