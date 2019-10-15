@@ -61,32 +61,6 @@ class QuestionEntity
         $this->answerEntities = new ArrayCollection();
     }
 
-    /**
-     * @param Question            $question
-     * @param QuestionGroupEntity $questionGroupEntity
-     * @param UserEntity          $userEntity
-     *
-     * @return QuestionEntity
-     *
-     * TODO: move this to EntityFactory
-     */
-    public static function buildFromQuestionAndQuestionGroupEntityAndUserEntity(
-        Question $question,
-        QuestionGroupEntity $questionGroupEntity,
-        UserEntity $userEntity
-    ) {
-        $questionEntity = new self();
-        $questionEntity->setId($question->id()->value())
-            ->setText($question->text())
-            ->setQuestionGroup($questionGroupEntity)
-            ->setUser($userEntity)
-            ->setCreatedAt($question->createdAt())
-            ->setUpdatedAt($question->updatedAt())
-            ->setDeletedAt($question->deletedAt());
-
-        return $questionEntity;
-    }
-
     public function getId(): string
     {
         return $this->id;

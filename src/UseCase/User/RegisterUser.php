@@ -6,6 +6,7 @@ use App\Factory\EntityFactory;
 use App\Factory\IdFactory;
 use App\Stack\User;
 use App\Entity\UserEntity;
+use App\UseCase\Exception\CanNotPersistUserEntityException;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
@@ -26,6 +27,14 @@ class RegisterUser
         $this->entityFactory = $entityFactory;
     }
 
+    /**
+     * @param string $username
+     * @param string $email
+     * @param string $password
+     *
+     * @return User
+     * @throws CanNotPersistUserEntityException
+     */
     public function execute(string $username, string $email, string $password)
     {
         // create user object
@@ -47,10 +56,11 @@ class RegisterUser
             $this->entityManager->persist($userEntity);
             $this->entityManager->flush();
         } catch (ORMException $e) {
-            // TODO: create CanNotPersistsUserEntityException
+            $m = 'Can not persist user entity.';
+            throw new CanNotPersistUserEntityException($m, 0, $e);
         }
 
-        // return user object
+        // TODO: fire user created event
         return $user;
     }
 }

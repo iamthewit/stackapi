@@ -72,27 +72,6 @@ class UserEntity
     }
 
     /**
-     * @param User $user
-     *
-     * @return UserEntity
-     *
-     * TODO: move this to EntityFactory
-     */
-    public static function buildFromUser(User $user): UserEntity
-    {
-        $userEntity = new self();
-        $userEntity->setId($user->id()->value())
-                   ->setUsername($user->username())
-                   ->setEmail($user->email())
-                   ->setPassword($user->password())
-                   ->setCreatedAt($user->createdAt())
-                   ->setUpdatedAt($user->updatedAt())
-                   ->setDeletedAt($user->deletedAt());
-
-        return $userEntity;
-    }
-
-    /**
      * @return mixed
      */
     public function getId()

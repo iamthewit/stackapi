@@ -3,6 +3,7 @@
 namespace App\Tests\Integration\App\UseCase\Answer;
 
 use App\Entity\AnswerEntity;
+use App\Repository\AnswerEntityRepository;
 use App\Stack\Answer;
 use App\Stack\Group;
 use App\Stack\Question;
@@ -30,7 +31,25 @@ class SubmitAnswerTest extends IntegrationTest
 
     public function testItStoresAnswerInRepository()
     {
+        $user = $this->createUser();
+        $group = $this->createGroup($user);
+        $question = $this->createQuestion($user, $group);
+        $answerText = 'answer text';
 
+        $useCase = self::$container->get(SubmitAnswer::class);
+
+        $useCase->execute($question, $answerText, $user);
+
+        $entityManager = self::$container->get('doctrine.orm.entity_manager');
+        $qb = $entityManager->createQueryBuilder();
+        $queryResultCount = $qb->select('count(a.id)')
+            ->from(AnswerEntity::class, 'a')
+            ->where('a.text = :answerText')
+            ->setParameter('answerText', $answerText)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $this->assertEquals(1, $queryResultCount);
     }
 
     /**

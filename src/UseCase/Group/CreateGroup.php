@@ -6,6 +6,7 @@ use App\Factory\EntityFactory;
 use App\Factory\IdFactory;
 use App\Stack\Group;
 use App\Stack\User;
+use App\UseCase\Exception\CanNotPersistGroupEntityException;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
@@ -32,6 +33,13 @@ class CreateGroup
         $this->entityFactory = $entityFactory;
     }
 
+    /**
+     * @param string $name
+     * @param User   $user
+     *
+     * @return Group
+     * @throws CanNotPersistGroupEntityException
+     */
     public function execute(string $name, User $user): Group
     {
         // create group object
@@ -52,9 +60,11 @@ class CreateGroup
             $this->entityManager->persist($groupEntity);
             $this->entityManager->flush();
         } catch (ORMException $e) {
-           // TODO: create CanNotPersistsGroupEntityException
+            $m = 'Can not persist group entity';
+            throw new CanNotPersistGroupEntityException($m, 0, $e);
         }
 
+        // TODO: fire group created event
         return $group;
     }
 }
