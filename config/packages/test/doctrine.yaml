@@ -1,3 +1,5 @@
 doctrine:
     dbal:
         driver: 'pdo_sqlite'
+        memory: true
+        url: # if you want to write changes to the test.db file when running tests, comment out this line

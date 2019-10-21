@@ -6,7 +6,11 @@ use App\Entity\AnswerEntity;
 use App\Entity\QuestionEntity;
 use App\Entity\QuestionGroupEntity;
 use App\Entity\UserEntity;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\SchemaTool;
+use Nelmio\Alice\Loader\NativeLoader;
+use Nelmio\Alice\ObjectSet;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class IntegrationTest extends KernelTestCase
@@ -29,5 +33,25 @@ class IntegrationTest extends KernelTestCase
         $schemaTool = new SchemaTool($entityManager);
         $schemaTool->dropDatabase();
         $schemaTool->createSchema($metaData);
+    }
+
+    /**
+     * @param array $dataToLoad
+     *
+     * @return ObjectSet
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function loadData(array $dataToLoad)
+    {
+        $em = self::$container->get('doctrine.orm.entity_manager');
+        $objectSet = (new NativeLoader())->loadData($dataToLoad);
+
+        foreach ($objectSet->getObjects() as $object) {
+            $em->persist($object);
+        }
+        $em->flush();
+
+        return $objectSet;
     }
 }

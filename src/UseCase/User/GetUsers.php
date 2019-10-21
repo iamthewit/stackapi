@@ -18,8 +18,6 @@ class GetUsers
 
     /**
      * @return ArrayObject
-     *
-     * TODO: add tests for this method
      */
     public function execute(): ArrayObject
     {
