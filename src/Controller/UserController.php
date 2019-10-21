@@ -2,9 +2,10 @@
 
 namespace App\Controller;
 
-use App\UseCase\User\GetUsers;
+use App\UseCase\User\GetUserSet;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
@@ -12,13 +13,17 @@ class UserController extends AbstractController
     /**
      * @Route("/user", name="user")
      *
-     * @param GetUsers $getUsers
+     * @param Request    $request
+     * @param GetUserSet $getUsers
      *
      * @return JsonResponse
      */
-    public function list(GetUsers $getUsers)
+    public function list(Request $request, GetUserSet $getUsers)
     {
-        $users = $getUsers->execute();
+        $page = $request->query->get('page', 1);
+        $perPage = $request->query->get('perPage', 10);
+
+        $users = $getUsers->execute($page, $perPage);
 
         // TODO: wrap users in generic response wrapper
             // data: [user array]

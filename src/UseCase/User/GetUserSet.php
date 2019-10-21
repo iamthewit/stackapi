@@ -6,7 +6,7 @@ use App\Repository\UserEntityRepository;
 use App\Stack\User;
 use ArrayObject;
 
-class GetUsers
+class GetUserSet
 {
     /** @var UserEntityRepository */
     private $userEntityRepository;
@@ -17,11 +17,14 @@ class GetUsers
     }
 
     /**
+     * @param int $set
+     * @param int $perSet
+     *
      * @return ArrayObject
      */
-    public function execute(): ArrayObject
+    public function execute(int $set = 1, int $perSet = 10): ArrayObject
     {
-        $userEntities = $this->userEntityRepository->findAll();
+        $userEntities = $this->userEntityRepository->findAllAndPaginate($set, $perSet);
 
         $users = new ArrayObject();
         foreach ($userEntities as $userEntity) {
