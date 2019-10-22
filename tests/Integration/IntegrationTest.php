@@ -11,10 +11,20 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\SchemaTool;
 use Nelmio\Alice\Loader\NativeLoader;
 use Nelmio\Alice\ObjectSet;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
-class IntegrationTest extends KernelTestCase
+class IntegrationTest extends WebTestCase
 {
+    // TODO: move this functionality out into traits
+        // container trait
+        // DB trait
+        // controller / request trait
+
+//    private $kernel;
+
     public function setUp()
     {
         $kernel = self::bootKernel();
@@ -53,5 +63,29 @@ class IntegrationTest extends KernelTestCase
         $em->flush();
 
         return $objectSet;
+    }
+
+    /**
+     * Creates a KernelBrowser.
+     *
+     * @param array $options An array of options to pass to the createKernel method
+     * @param array $server  An array of server parameters
+     *
+     * @return KernelBrowser A KernelBrowser instance
+     */
+    public function createClient(array $options = [], array $server = [])
+    {
+        try {
+            $client = self::$kernel->getContainer()->get('test.client');
+        } catch (ServiceNotFoundException $e) {
+            if (class_exists(KernelBrowser::class)) {
+                throw new \LogicException('You cannot create the client used in functional tests if the "framework.test" config is not set to true.');
+            }
+            throw new \LogicException('You cannot create the client used in functional tests if the BrowserKit component is not available. Try running "composer require symfony/browser-kit"');
+        }
+
+        $client->setServerParameters($server);
+
+        return $client;
     }
 }

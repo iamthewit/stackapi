@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Http\Meta;
+use App\Http\Response;
 use App\UseCase\User\GetUserSet;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -11,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/user", name="user")
+     * @Route("/users", name="user")
      *
      * @param Request    $request
      * @param GetUserSet $getUsers
@@ -25,12 +27,38 @@ class UserController extends AbstractController
 
         $users = $getUsers->execute($page, $perPage);
 
-        // TODO: wrap users in generic response wrapper
-            // data: [user array]
-            // meta: {count: x, request = y, etc, etc}
+        $meta = new Meta($request->getRequestUri(), count($users),[]);
+        $response = new Response($users->getArrayCopy(), $meta);
 
         // TODO: add test for this endpoint
 
-        return $this->json($users->getArrayCopy());
+        return $this->json($response);
+    }
+
+    public function create()
+    {
+        // TODO
+    }
+
+    public function read()
+    {
+        // return info on a single user
+
+        // TODO: links array could contain:
+            // uri to a users questions - /user/ID/questions
+            // uri to a users answers - /user/ID/answers
+//        $links = [
+//            new Link('/users/')
+//        ];
+    }
+
+    public function update()
+    {
+        // TODO
+    }
+
+    public function delete()
+    {
+        // TODO
     }
 }

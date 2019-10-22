@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 
 class UserEntityRepositoryTest extends IntegrationTest
 {
-
     public function testFindAll()
     {
         $users = [
