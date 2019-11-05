@@ -26,7 +26,7 @@ class UserControllerTest extends IntegrationTest
         ];
         $this->loadData($users);
 
-        $client = $this->createClient();
+        $client = $this->client();
         $client->request('GET', '/users');
 
         $response = $client->getResponse();

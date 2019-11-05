@@ -68,12 +68,11 @@ class IntegrationTest extends WebTestCase
     /**
      * Creates a KernelBrowser.
      *
-     * @param array $options An array of options to pass to the createKernel method
      * @param array $server  An array of server parameters
      *
      * @return KernelBrowser A KernelBrowser instance
      */
-    public function createClient(array $options = [], array $server = [])
+    public function client(array $server = [])
     {
         try {
             $client = self::$kernel->getContainer()->get('test.client');
