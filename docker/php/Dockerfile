@@ -1,4 +1,4 @@
-FROM php:7.2-fpm
+FROM php:7.3-fpm
 
 RUN apt-get update && apt-get install -y \
    wget \
@@ -11,8 +11,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN docker-php-ext-install pdo_mysql
 
-#TODO: this:
-#COPY php.ini /usr/local/etc/php
+COPY helper-scripts/install-composer.sh /install-composer.sh
+RUN /install-composer.sh
 
-#TODO: getthis to work...
-#RUN /srv/www/api/docker/php/helper-scripts/install-composer.sh
+WORKDIR /srv/www/api
